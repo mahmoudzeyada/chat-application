@@ -1,0 +1,94 @@
+import * as boom from "@hapi/boom";
+import * as express from "express";
+import {createServer, Server} from "http";
+import * as logger from "morgan";
+import * as path from "path";
+import * as socketIo from "socket.io";
+import * as config from "./config/config.json";
+import {indexRouterObj} from "./routes/index.router";
+export class ChatServer {
+  public static readonly PORT: number = 8080;
+  public static readonly publicDirectoryPath: string = path.join(__dirname, "public");
+  public static readonly viewsDirectoryPath: string = path.join(__dirname, "views");
+  private _app: express.Application;
+  private server: Server;
+  private io: socketIo.Server;
+  private port: string | number;
+  constructor() {
+      this._app = express();
+      this.port = config.port || ChatServer.PORT;
+      this.server = createServer(this._app);
+      this._app.use(express.static(ChatServer.publicDirectoryPath));
+      this._app.use(logger("dev"));
+      this.initTemplateEngine();
+      this.initRouters();
+      this.initializeCustomErrorHandler();
+      this.initSocket();
+      this.listen();
+  }
+  private initRouters(): void {
+    this._app.get("/", indexRouterObj.router);
+  }
+  private initTemplateEngine(): void {
+    this._app.set("views", ChatServer.viewsDirectoryPath);
+    this._app.set("view engine", "pug");
+  }
+  private initSocket(): void {
+      this.io = socketIo(this.server);
+  }
+  private initializeCustomErrorHandler(): void {
+    // catch 404 and forward to error handler
+    this._app.use((req, res, next) => {
+      next(boom.notFound("sorry this page not found"));
+    });
+    // custom error handler
+    this._app.use((err: boom.Boom, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      if (err.isServer) {
+        console.log(err);
+      }
+      res.status(err.output.statusCode).json(err.output.payload);
+  });
+  }
+  private listen(): void {
+    this.server.listen(this.port, () => {
+      console.log(`server running on port ${this.port}`);
+    });
+    // on hook for connecting websocket
+    this.io.on("connection", (socket: any) => {
+      console.log(`connected client is on port ${this.port}`);
+    });
+    // on hook for disconnecting websocket
+    this.io.on("disconnect", () => {
+      console.log(`disconnected client is on port ${this.port}`);
+    });
+
+  }
+  get app(): express.Application {
+    return this._app;
+  }
+}
+// var app = express();
+// // view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
+// app.use(logger('dev'));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+// app.use(cookieParser());
+// app.use(express.static(path.join(__dirname, 'public')));
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
+// // catch 404 and forward to error handler
+// app.use(function (req, res, next) {
+//     next(boom.notFound('sorry this page not found'));
+// });
+// // error handler
+// app.use(function (err, req, res, next) {
+//     // set locals, only providing error in development
+//     res.locals.message = err.message;
+//     res.locals.error = req.app.get('env') === 'development' ? err : {};
+//     // render the error page
+//     res.status(err.status || 500);
+//     res.render('error');
+// });
+// module.exports = app;
