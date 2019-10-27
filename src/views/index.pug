@@ -1,6 +1,11 @@
 extends layout
+
+block content
+  h1 ChatApp
+  form(id = "messageForm")
+    input(type="text", name = "message", placeholder="message")
+    button(type="submit") Send
+
 block scripts
   script(src="/socket.io/socket.io.js")
   script(src="/javascripts/chat.js")
-block content
-  h1 ChatApp

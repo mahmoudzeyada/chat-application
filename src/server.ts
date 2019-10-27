@@ -4,6 +4,7 @@ import {createServer, Server} from "http";
 import * as logger from "morgan";
 import * as path from "path";
 import * as socketIo from "socket.io";
+import Chat from "./chat/chat";
 import * as config from "./config/config.json";
 import {indexRouterObj} from "./routes/index.router";
 export class ChatServer {
@@ -53,15 +54,8 @@ export class ChatServer {
     this.server.listen(this.port, () => {
       console.log(`server running on port ${this.port}`);
     });
-    // on hook for connecting websocket
-    this.io.on("connection", (socket: any) => {
-      console.log(`connected client is on port ${this.port}`);
-    });
-    // on hook for disconnecting websocket
-    this.io.on("disconnect", () => {
-      console.log(`disconnected client is on port ${this.port}`);
-    });
-
+    // initialize websocket connection
+    const chat = new Chat(this.io, this.port);
   }
   get app(): express.Application {
     return this._app;
