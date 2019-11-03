@@ -14,7 +14,12 @@ document
     e.preventDefault();
     const elements = (e.target as HTMLFormElement).elements;
     const input = elements as IElement;
-    socket.emit("submitMessage", input.message.value);
+    socket.emit("submitMessage", input.message.value, (errorAck: string) => {
+      if (errorAck) {
+        return console.log(errorAck);
+      }
+      return console.log("Message Delivered!!");
+    });
   });
 
 document.querySelector("#shareLocation").addEventListener("click", () => {
@@ -23,9 +28,18 @@ document.querySelector("#shareLocation").addEventListener("click", () => {
   }
   navigator.geolocation.getCurrentPosition((position: Position) => {
     console.log(position);
-    socket.emit("shareLocationCoords", {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude
-    });
+    socket.emit(
+      "shareLocationCoords",
+      {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      },
+      (errorAck: string) => {
+        if (errorAck) {
+          return console.log(errorAck);
+        }
+        return console.log("location Shared!!");
+      }
+    );
   });
 });

@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { ICoords } from "../interfaces/chat.interface";
+import * as Filter from "bad-words";
 
 class Chat {
   private readonly io: Server;
@@ -31,8 +32,13 @@ class Chat {
   }
   private sendingBackMessageToAllUsers(socket: Socket) {
     // sending message for all connection
-    socket.on("submitMessage", message => {
+    socket.on("submitMessage", (message, cb): (() => string) => {
+      const filter = new Filter();
+      if (filter.isProfane(message)) {
+        return cb("Profanity is not allowed");
+      }
       this.io.emit("message", message);
+      cb();
     });
   }
   private sendingDisconnectToAllUsers(socket: Socket) {
@@ -43,11 +49,12 @@ class Chat {
   }
 
   private sendingBackLocationToAllUsers(socket: Socket) {
-    socket.on("shareLocationCoords", ({ latitude, longitude }: ICoords) => {
+    socket.on("shareLocationCoords", ({ latitude, longitude }: ICoords, cb) => {
       socket.broadcast.emit(
         "message",
         `https://google.com/maps?q=${latitude},${longitude}`
       );
+      cb();
     });
   }
 }
