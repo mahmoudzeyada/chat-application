@@ -1,4 +1,5 @@
-import {Server, Socket} from "socket.io";
+import { Server, Socket } from "socket.io";
+import { ICoords } from "../interfaces/chat.interface";
 
 class Chat {
   private readonly io: Server;
@@ -17,26 +18,36 @@ class Chat {
       this.broadcastingMessageForJoinedUsers(socket);
       this.sendingBackMessageToAllUsers(socket);
       this.sendingDisconnectToAllUsers(socket);
+      this.sendingBackLocationToAllUsers(socket);
     });
   }
   private sendingAllWelcomeMessage(socket: Socket) {
     // sending welcome message
-    socket.emit("welcome", "welcome :)");
+    socket.emit("message", "welcome :)");
   }
   private broadcastingMessageForJoinedUsers(socket: Socket) {
-       // broadcasting for new users
-      socket.broadcast.emit("welcome", "new user have joined");
+    // broadcasting for new users
+    socket.broadcast.emit("message", "new user have joined");
   }
   private sendingBackMessageToAllUsers(socket: Socket) {
     // sending message for all connection
-    socket.on("submitMessage", (message) => {
-      this.io.emit("welcome", message);
+    socket.on("submitMessage", message => {
+      this.io.emit("message", message);
     });
   }
   private sendingDisconnectToAllUsers(socket: Socket) {
     // sending message for all connections
     socket.on("disconnect", () => {
-      this.io.emit("welcome", "a user has disconnected");
+      this.io.emit("message", "a user has disconnected");
+    });
+  }
+
+  private sendingBackLocationToAllUsers(socket: Socket) {
+    socket.on("shareLocationCoords", ({ latitude, longitude }: ICoords) => {
+      socket.broadcast.emit(
+        "message",
+        `https://google.com/maps?q=${latitude},${longitude}`
+      );
     });
   }
 }
