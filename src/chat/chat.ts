@@ -1,5 +1,4 @@
 import {Server, Socket} from "socket.io";
-import { Socket } from "net";
 
 class Chat {
   private readonly io: Server;

@@ -1,31 +1,37 @@
 import * as boom from "@hapi/boom";
 import * as express from "express";
-import {createServer, Server} from "http";
+import { createServer, Server } from "http";
 import * as logger from "morgan";
 import * as path from "path";
 import * as socketIo from "socket.io";
 import Chat from "./chat/chat";
 import * as config from "./config/config.json";
-import {indexRouterObj} from "./routes/index.router";
+import { indexRouterObj } from "./routes/index.router";
 export class ChatServer {
   public static readonly PORT: number = 8080;
-  public static readonly publicDirectoryPath: string = path.join(__dirname, "public");
-  public static readonly viewsDirectoryPath: string = path.join(__dirname, "views");
+  public static readonly publicDirectoryPath: string = path.join(
+    __dirname,
+    "public"
+  );
+  public static readonly viewsDirectoryPath: string = path.join(
+    __dirname,
+    "../views"
+  );
   private _app: express.Application;
   private server: Server;
   private io: socketIo.Server;
   private port: string | number;
   constructor() {
-      this._app = express();
-      this.port = config.port || ChatServer.PORT;
-      this.server = createServer(this._app);
-      this._app.use(express.static(ChatServer.publicDirectoryPath));
-      this._app.use(logger("dev"));
-      this.initTemplateEngine();
-      this.initRouters();
-      this.initializeCustomErrorHandler();
-      this.initSocket();
-      this.listen();
+    this._app = express();
+    this.port = config.port || ChatServer.PORT;
+    this.server = createServer(this._app);
+    this._app.use(express.static(ChatServer.publicDirectoryPath));
+    this._app.use(logger("dev"));
+    this.initTemplateEngine();
+    this.initRouters();
+    this.initializeCustomErrorHandler();
+    this.initSocket();
+    this.listen();
   }
   private initRouters(): void {
     this._app.get("/", indexRouterObj.router);
@@ -35,7 +41,7 @@ export class ChatServer {
     this._app.set("view engine", "pug");
   }
   private initSocket(): void {
-      this.io = socketIo(this.server);
+    this.io = socketIo(this.server);
   }
   private initializeCustomErrorHandler(): void {
     // catch 404 and forward to error handler
@@ -43,15 +49,25 @@ export class ChatServer {
       next(boom.notFound("sorry this page not found"));
     });
     // custom error handler
-    this._app.use((err: boom.Boom, req: express.Request, res: express.Response, next: express.NextFunction) => {
-      if (err.isServer) {
+    this._app.use(
+      (
+        err: boom.Boom,
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+      ) => {
+        if (err.isServer) {
+          // tslint:disable-next-line: no-console
+          console.log(err);
+        }
         console.log(err);
+        res.status(err.output.statusCode).json(err.output.payload);
       }
-      res.status(err.output.statusCode).json(err.output.payload);
-  });
+    );
   }
   private listen(): void {
     this.server.listen(this.port, () => {
+      // tslint:disable-next-line: no-console
       console.log(`server running on port ${this.port}`);
     });
     // initialize websocket connection
