@@ -1,31 +1,45 @@
 const socket = io();
 
-socket.on("message", (welcomeMessage: string) => {
-  console.log(welcomeMessage);
-});
-
 interface IElement extends HTMLFormControlsCollection {
   message: HTMLInputElement;
 }
 
-document
-  .querySelector("#messageForm")
-  .addEventListener("submit", (e: Event) => {
-    e.preventDefault();
-    const elements = (e.target as HTMLFormElement).elements;
-    const input = elements as IElement;
-    socket.emit("submitMessage", input.message.value, (errorAck: string) => {
-      if (errorAck) {
-        return console.log(errorAck);
-      }
-      return console.log("Message Delivered!!");
-    });
-  });
+const $messageForm = document.querySelector("#messageForm");
+const $messageFormInput = $messageForm.querySelector("input");
+const $messageFormButton = $messageForm.querySelector("button");
+const $shareLocationButton = document.getElementById("shareLocation");
+const $messages = document.getElementById("messages");
+const $messagesTemplate = document.getElementById("messagesTemplate").innerHTML;
 
-document.querySelector("#shareLocation").addEventListener("click", () => {
+socket.on("message", (message: string) => {
+  const html = Mustache.render($messagesTemplate, { message });
+  $messages.insertAdjacentHTML("beforeend", html);
+});
+
+$messageForm.addEventListener("submit", (e: Event) => {
+  e.preventDefault();
+  const elements = (e.target as HTMLFormElement).elements;
+  const input = elements as IElement;
+  // disable submit button
+  $messageFormButton.setAttribute("disabled", "disabled");
+  socket.emit("submitMessage", input.message.value, (errorAck: string) => {
+    // enable button and removing input filed
+    $messageFormButton.removeAttribute("disabled");
+    $messageFormInput.value = "";
+    $messageFormInput.focus();
+    if (errorAck) {
+      return console.log(errorAck);
+    }
+    return console.log("Message Delivered!!");
+  });
+});
+
+$shareLocationButton.addEventListener("click", () => {
   if (!navigator.geolocation) {
     return alert("Geolocation is not supported by your browser :(");
   }
+  // disable share location button
+  $shareLocationButton.setAttribute("disabled", "disabled");
   navigator.geolocation.getCurrentPosition((position: Position) => {
     console.log(position);
     socket.emit(
@@ -35,6 +49,8 @@ document.querySelector("#shareLocation").addEventListener("click", () => {
         longitude: position.coords.longitude
       },
       (errorAck: string) => {
+        // enable share location button
+        $shareLocationButton.removeAttribute("disabled");
         if (errorAck) {
           return console.log(errorAck);
         }
