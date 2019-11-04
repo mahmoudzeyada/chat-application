@@ -50,7 +50,7 @@ class Chat {
 
   private sendingBackLocationToAllUsers(socket: Socket) {
     socket.on("shareLocationCoords", ({ latitude, longitude }: ICoords, cb) => {
-      socket.broadcast.emit(
+      this.io.emit(
         "message",
         `https://google.com/maps?q=${latitude},${longitude}`
       );
