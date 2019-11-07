@@ -1,6 +1,9 @@
 import { Server, Socket } from "socket.io";
 import { ICoords } from "../interfaces/chat.interface";
-import * as Filter from "bad-words";
+
+// tslint:disable-next-line: no-var-requires
+// tslint:disable-next-line: variable-name no-var-requires
+const Filter = require("bad-words");
 
 class Chat {
   private readonly io: Server;
@@ -51,7 +54,7 @@ class Chat {
   private sendingBackLocationToAllUsers(socket: Socket) {
     socket.on("shareLocationCoords", ({ latitude, longitude }: ICoords, cb) => {
       this.io.emit(
-        "message",
+        "shareLocationCoords",
         `https://google.com/maps?q=${latitude},${longitude}`
       );
       cb();

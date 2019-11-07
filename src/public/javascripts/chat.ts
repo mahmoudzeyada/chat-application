@@ -10,7 +10,14 @@ const $messageFormButton = $messageForm.querySelector("button");
 const $shareLocationButton = document.getElementById("shareLocation");
 const $messages = document.getElementById("messages");
 const $messagesTemplate = document.getElementById("messagesTemplate").innerHTML;
+const $locationTemplate = document.getElementById("locationTemplate").innerHTML;
 
+socket.on("shareLocationCoords", (url: string) => {
+  const html = Mustache.render($locationTemplate, { url });
+  $messages.insertAdjacentHTML("beforeend", html);
+});
+
+// message event
 socket.on("message", (message: string) => {
   const html = Mustache.render($messagesTemplate, { message });
   $messages.insertAdjacentHTML("beforeend", html);
