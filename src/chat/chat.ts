@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { ICoords } from "../interfaces/chat.interface";
+import { timeStampMessage } from "../utils/message";
 
 // tslint:disable-next-line: no-var-requires
 // tslint:disable-next-line: variable-name no-var-requires
@@ -27,7 +28,10 @@ class Chat {
   }
   private sendingAllWelcomeMessage(socket: Socket) {
     // sending welcome message
-    socket.emit("message", "welcome :)");
+    socket.emit(
+      "welcomeMessage",
+      timeStampMessage("welcome :) you are online")
+    );
   }
   private broadcastingMessageForJoinedUsers(socket: Socket) {
     // broadcasting for new users
@@ -40,14 +44,14 @@ class Chat {
       if (filter.isProfane(message)) {
         return cb("Profanity is not allowed");
       }
-      this.io.emit("message", message);
-      cb();
+      socket.broadcast.emit("message", timeStampMessage(message));
+      cb(timeStampMessage(message).createdAt);
     });
   }
   private sendingDisconnectToAllUsers(socket: Socket) {
     // sending message for all connections
     socket.on("disconnect", () => {
-      this.io.emit("message", "a user has disconnected");
+      this.io.emit("message", timeStampMessage("a user has disconnected"));
     });
   }
 
@@ -55,7 +59,7 @@ class Chat {
     socket.on("shareLocationCoords", ({ latitude, longitude }: ICoords, cb) => {
       this.io.emit(
         "shareLocationCoords",
-        `https://google.com/maps?q=${latitude},${longitude}`
+        timeStampMessage(`https://google.com/maps?q=${latitude},${longitude}`)
       );
       cb();
     });
