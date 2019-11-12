@@ -1,68 +1,89 @@
+import { compileMessages } from "./utils/compileMessages";
+import * as $ from "jquery";
+import "bootstrap-notify";
+
 const socket = io();
 
-interface IElement extends HTMLFormControlsCollection {
-  message: HTMLInputElement;
-}
+// variables
+$(document).ready(() => {
+  const $outGoingMessagesTemplate = $("#outGoingMessagesTemplate").html();
+  const $inGoingMessagesTemplate = $("#inGoingMessagesTemplate").html();
+  const $locationTemplate = $("#shareLocationTemplate").html();
+  const $shareLocationButton = $("#messageForm button[name=location]");
 
-const $messageForm = document.querySelector("#messageForm");
-const $messageFormInput = $messageForm.querySelector("input");
-const $messageFormButton = $messageForm.querySelector("button");
-const $shareLocationButton = document.getElementById("shareLocation");
-const $messages = document.getElementById("messages");
-const $messagesTemplate = document.getElementById("messagesTemplate").innerHTML;
-const $locationTemplate = document.getElementById("locationTemplate").innerHTML;
-
-socket.on("shareLocationCoords", (url: string) => {
-  const html = Mustache.render($locationTemplate, { url });
-  $messages.insertAdjacentHTML("beforeend", html);
-});
-
-// message event
-socket.on("message", (message: string) => {
-  const html = Mustache.render($messagesTemplate, { message });
-  $messages.insertAdjacentHTML("beforeend", html);
-});
-
-$messageForm.addEventListener("submit", (e: Event) => {
-  e.preventDefault();
-  const elements = (e.target as HTMLFormElement).elements;
-  const input = elements as IElement;
-  // disable submit button
-  $messageFormButton.setAttribute("disabled", "disabled");
-  socket.emit("submitMessage", input.message.value, (errorAck: string) => {
-    // enable button and removing input filed
-    $messageFormButton.removeAttribute("disabled");
-    $messageFormInput.value = "";
-    $messageFormInput.focus();
-    if (errorAck) {
-      return console.log(errorAck);
-    }
-    return console.log("Message Delivered!!");
-  });
-});
-
-$shareLocationButton.addEventListener("click", () => {
-  if (!navigator.geolocation) {
-    return alert("Geolocation is not supported by your browser :(");
-  }
-  // disable share location button
-  $shareLocationButton.setAttribute("disabled", "disabled");
-  navigator.geolocation.getCurrentPosition((position: Position) => {
-    console.log(position);
-    socket.emit(
-      "shareLocationCoords",
-      {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      },
-      (errorAck: string) => {
-        // enable share location button
-        $shareLocationButton.removeAttribute("disabled");
-        if (errorAck) {
-          return console.log(errorAck);
-        }
-        return console.log("location Shared!!");
-      }
+  socket.on("shareLocationCoords", (message: IMessage) => {
+    console.log(message);
+    compileMessages(
+      $locationTemplate,
+      message.createdAt,
+      message.text,
+      $(".msg_history")
     );
+  });
+
+  // welcome event
+  socket.on("welcomeMessage", (message: IMessage) => {
+    $.notify({
+      icon: "fa fa-bell-o",
+      message: message.text
+    });
+  });
+
+  // message event
+  socket.on("message", (message: IMessage) => {
+    compileMessages(
+      $inGoingMessagesTemplate,
+      message.createdAt,
+      message.text,
+      $(".msg_history")
+    );
+  });
+
+  $("#messageForm").on("submit", e => {
+    e.preventDefault();
+    const inputValue = $("#messageForm input[name=message]").val() as string;
+    // disable submit button
+    $("#messageForm button[name=submit]").attr("disabled", "true");
+    socket.emit("submitMessage", inputValue, (ack: string) => {
+      // enable button
+      $("#messageForm button[name=submit]").removeAttr("disabled");
+      $("#messageForm input[name=message]").val("");
+      $("#message").focus();
+      if (ack === "Profanity is not allowed") {
+        return console.log(ack);
+      }
+      compileMessages(
+        $outGoingMessagesTemplate,
+        ack,
+        inputValue,
+        $(".msg_history")
+      );
+    });
+  });
+
+  $shareLocationButton.on("click", () => {
+    if (!navigator.geolocation) {
+      return alert("Geolocation is not supported by your browser :(");
+    }
+    // disable share location button
+    $shareLocationButton.attr("disabled", "disabled");
+    navigator.geolocation.getCurrentPosition((position: Position) => {
+      console.log(position);
+      socket.emit(
+        "shareLocationCoords",
+        {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        },
+        (errorAck: string) => {
+          // enable share location button
+          $shareLocationButton.removeAttr("disabled");
+          if (errorAck) {
+            return console.log(errorAck);
+          }
+          return console.log("location Shared!!");
+        }
+      );
+    });
   });
 });
