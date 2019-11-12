@@ -27,6 +27,7 @@ build/Release
 node_modules/
 dist/
 views/*.html
+views/partials/*.html
 # Users Environment Variables
 .lock-wscript
 
