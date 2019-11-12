@@ -42,27 +42,21 @@ block content
                     | astrology under one roof.
           
         .mesgs
-          .msg_history
-            .incoming_msg
-              .incoming_msg_img
-                img(src='https://ptetutorials.com/images/user-profile.png' alt='sunil')
-              .received_msg
-                .received_withd_msg
-                  p
-                    | Test which is a new approach to have all
-                    | solutions
-                  span.time_date  11:01 AM    |    June 9
-            .outgoing_msg
-              .sent_msg
-                p
-                  | Test which is a new approach to have all
-                  | solutions
-                span.time_date  11:01 AM    |    June 9
+          .msg_history  
           .type_msg
             .input_msg_write
-              input.write_msg(type='text' placeholder='Type a message')
-              button.msg_send_btn(type='button')
-                i.fa.fa-paper-plane-o(aria-hidden='true')
-      p.text-center.top_spac
-        | Design by 
-        a(target='_blank' href='#') Mahmoud Zeyada
+              form(id="messageForm")
+                input.write_msg(type='text' name = "message" placeholder='Type a message')
+                button.msg_send_btn(type='button submit' name = "submit")
+                  i.fa.fa-paper-plane-o(aria-hidden='true')
+                button.msg_location_btn(type='button' name = "location")
+                  t.fa.fa-map-marker(aria-hidden='true')
+    include partials/footer
+  include partials/outGoingMessage
+  include partials/inGoingMessage
+  include partials/locationMessage
+block scripts
+  script(src = "/socket.io/socket.io.js")
+  script(src = "/javascripts/bundle.js")
+  
+
