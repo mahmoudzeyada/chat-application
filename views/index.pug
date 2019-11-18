@@ -2,9 +2,6 @@ extends layout.pug
   
 block content
   .container
-    h3.text-center
-      #title
-      | Chat App
     .messaging
       .inbox_msg
         .inbox_people
@@ -46,17 +43,24 @@ block content
           .type_msg
             .input_msg_write
               form(id="messageForm")
-                input.write_msg(type='text' name = "message" placeholder='Type a message')
-                button.msg_send_btn(type='button submit' name = "submit")
-                  i.fa.fa-paper-plane-o(aria-hidden='true')
-                button.msg_location_btn(type='button' name = "location")
-                  t.fa.fa-map-marker(aria-hidden='true')
-    include partials/footer
+                div(class="row_emoji")
+                  div(class="span")
+                    textarea(id="emojiArea")
+                  
+                    button.msg_send_btn(type='button submit' name = "submit")
+                      i.fa.fa-paper-plane-o(aria-hidden='true') submit
+              
+                    button.msg_location_btn(type='button' name = "location")
+                      i.fa.fa-map-marker(aria-hidden='true') Share Location
+
+                  
+  
   include partials/outGoingMessage
   include partials/inGoingMessage
   include partials/locationMessage
 block scripts
   script(src = "/socket.io/socket.io.js")
   script(src = "/javascripts/bundle.js")
+  
   
 

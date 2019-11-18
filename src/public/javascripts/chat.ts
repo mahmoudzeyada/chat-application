@@ -1,7 +1,7 @@
 import { compileMessages } from "./utils/compileMessages";
 import * as $ from "jquery";
 import "bootstrap-notify";
-
+import "./utils/emojipicker";
 const socket = io();
 
 // variables
@@ -42,6 +42,9 @@ $(document).ready(() => {
   $("#messageForm").on("submit", e => {
     e.preventDefault();
     const inputValue = $("#messageForm input[name=message]").val() as string;
+    if (inputValue === "") {
+      return;
+    }
     // disable submit button
     $("#messageForm button[name=submit]").attr("disabled", "true");
     socket.emit("submitMessage", inputValue, (ack: string) => {

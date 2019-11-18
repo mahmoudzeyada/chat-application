@@ -11,7 +11,7 @@ img {
   background: #f8f8f8 none repeat scroll 0 0;
   float: left;
   overflow: hidden;
-  width: 40%;
+  width: 20%;
   border-right: 1px solid #c4c4c4;
   height: 100%;
 }
@@ -20,12 +20,16 @@ img {
   border: 1px solid #c4c4c4;
   clear: both;
   overflow: hidden;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
 }
 
 .top_spac {
   margin: 20px 0 0;
 }
-
 
 .recent_heading {
   float: left;
@@ -36,7 +40,7 @@ img {
   display: inline-block;
   text-align: right;
   width: 60%;
-  padding:
+  padding: ;
 }
 
 .headind_srch {
@@ -85,7 +89,7 @@ img {
 .chat_ib p {
   font-size: 14px;
   color: #989898;
-  margin: auto
+  margin: auto;
 }
 
 .chat_img {
@@ -138,7 +142,8 @@ img {
   font-size: 14px;
   margin: 0;
   padding: 5px 10px 5px 12px;
-  width: 100%;
+  width: 80%;
+  word-wrap: break-word;
 }
 
 .time_date {
@@ -154,8 +159,7 @@ img {
 
 .mesgs {
   float: left;
-  padding: 30px 15px 0 25px;
-  width: 60%;
+  width: 80%;
 }
 
 .sent_msg p {
@@ -166,12 +170,12 @@ img {
   color: #fff;
   padding: 5px 10px 5px 12px;
   width: 100%;
+  word-wrap: break-word;
 }
-
 
 .outgoing_msg {
   overflow: hidden;
-  margin: 26px 0 26px;
+  margin: 26px 50px 26px;
 }
 
 .sent_msg {
@@ -179,13 +183,22 @@ img {
   width: 46%;
 }
 
-.input_msg_write input {
+.row_emoji {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
   border: medium none;
   color: #4c4c4c;
   font-size: 15px;
   min-height: 48px;
   width: 100%;
+  content: " ";
+  display: table;
+  clear: both;
+}
+
+.span {
+  float: left;
+  width: 100%;
+  padding: 3% 4%;
 }
 
 .type_msg {
@@ -195,28 +208,24 @@ img {
 
 .msg_send_btn {
   background: hsl(268, 98%, 50%) none repeat scroll 0 0;
-  border: medium none;
-  border-radius: 50%;
   color: #fff;
   cursor: pointer;
   font-size: 17px;
   height: 33px;
-  position: absolute;
-  right: 50;
-  top: 11px;
-  width: 33px;
 }
 
 .msg_location_btn {
   background: hsl(268, 98%, 50%) none repeat scroll 0 0;
-  border: medium none;
-  border-radius: 50%;
   color: #fff;
   cursor: pointer;
   font-size: 17px;
   height: 33px;
+}
+
+.msg_emoji_div {
+  height: 33px;
   position: absolute;
-  right: 0;
+  right: 60;
   top: 11px;
   width: 33px;
 }
@@ -226,6 +235,43 @@ img {
 }
 
 .msg_history {
-  height: 90%;
+  height: 87%;
   overflow-y: auto;
+}
+
+.input_msg_write {
+  background-color: #e9ecef;
+  height: 100%;
+}
+
+.btn-group button {
+  background-color: #4CAF50;
+  /* Green background */
+  border: 1px solid green;
+  /* Green border */
+  color: white;
+  /* White text */
+  padding: 10px 24px;
+  /* Some padding */
+  cursor: pointer;
+  /* Pointer/hand icon */
+  float: left;
+  /* Float the buttons side by side */
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none;
+  /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
 }

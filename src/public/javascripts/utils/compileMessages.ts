@@ -11,4 +11,13 @@ export const compileMessages = (
     createdAt
   });
   container.append(html);
+  // animation to scroll bottom
+  container.animate(
+    {
+      scrollTop:
+        document.querySelector(".msg_history").scrollHeight -
+        document.querySelector(".msg_history").clientHeight
+    },
+    500
+  );
 };
