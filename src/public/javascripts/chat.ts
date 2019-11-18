@@ -41,7 +41,7 @@ $(document).ready(() => {
 
   $("#messageForm").on("submit", e => {
     e.preventDefault();
-    const inputValue = $("#messageForm input[name=message]").val() as string;
+    const inputValue = $("#emojiArea").val() as string;
     if (inputValue === "") {
       return;
     }
@@ -50,8 +50,10 @@ $(document).ready(() => {
     socket.emit("submitMessage", inputValue, (ack: string) => {
       // enable button
       $("#messageForm button[name=submit]").removeAttr("disabled");
-      $("#messageForm input[name=message]").val("");
-      $("#message").focus();
+      $("#emojiArea")
+        .val("")
+        .change();
+      $("#emojiArea").focus();
       if (ack === "Profanity is not allowed") {
         return console.log(ack);
       }
