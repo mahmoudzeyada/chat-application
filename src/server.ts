@@ -29,6 +29,7 @@ export class ChatServer {
     this._app.use(logger("dev"));
     this.initTemplateEngine();
     this.initRouters();
+    this.shortCutLinks();
     this.initializeCustomErrorHandler();
     this.initSocket();
     this.listen();
@@ -64,6 +65,20 @@ export class ChatServer {
         res.status(err.output.statusCode).json(err.output.payload);
       }
     );
+  }
+  private shortCutLinks(): void {
+    const pathCssEmojiArea = path.join(
+      __dirname,
+      "../node_modules/emojionearea/dist/emojionearea.min.css"
+    );
+
+    const pathCssEmojiOne = path.join(
+      __dirname,
+      "../node_modules/emojione/extras/css/emojione.min.css"
+    );
+
+    this._app.use("/pathCssEmojiArea", express.static(pathCssEmojiArea));
+    this._app.use("/pathCssEmojiOne", express.static(pathCssEmojiOne));
   }
   private listen(): void {
     this.server.listen(this.port, () => {
