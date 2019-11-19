@@ -1,3 +1,17 @@
+extends layout
 
-  
+block styles
+  link(rel="stylesheet", href="/stylesheets/indexPage/style.css")
+
+block content
+  .centered-form
+    .centered-form__box
+      h1 join
+      form(action = "/chat")
+        label() Display Name
+        input(type = "text" name = "username" placeholder = "Display Name" required)
+        label() Room
+        input(type = "text" name = "room" placeholder = "Room" required)
+        button(class="btn btn-lg btn-primary") join
+    
 
