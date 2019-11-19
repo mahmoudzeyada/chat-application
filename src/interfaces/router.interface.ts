@@ -1,6 +1,6 @@
-import {Router} from "express";
+import { Router } from "express";
 
 export interface IRouter {
-  path: string;
+  readonly path: string;
   router: Router;
 }

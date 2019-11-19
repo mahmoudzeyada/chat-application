@@ -7,6 +7,7 @@ import * as socketIo from "socket.io";
 import Chat from "./chat/chat";
 import * as config from "./config/config.json";
 import { indexRouterObj } from "./routes/index.router";
+import { chatRouterObj } from "./routes/chat.router";
 export class ChatServer {
   public static readonly PORT: number = 8080;
   public static readonly publicDirectoryPath: string = path.join(
@@ -35,7 +36,8 @@ export class ChatServer {
     this.listen();
   }
   private initRouters(): void {
-    this._app.get("/", indexRouterObj.router);
+    this._app.use(indexRouterObj.router);
+    this._app.use(chatRouterObj.router);
   }
   private initTemplateEngine(): void {
     this._app.set("views", ChatServer.viewsDirectoryPath);
