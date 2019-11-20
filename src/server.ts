@@ -24,7 +24,7 @@ export class ChatServer {
   private port: string | number;
   constructor() {
     this._app = express();
-    this.port = config.port || ChatServer.PORT;
+    this.port = process.env.PORT || ChatServer.PORT;
     this.server = createServer(this._app);
     this._app.use(express.static(ChatServer.publicDirectoryPath));
     this._app.use(logger("dev"));
