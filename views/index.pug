@@ -9,10 +9,8 @@ block content
       h1 join
       form(action = "/chat")
         label() Display Name
-        input(type = "text" name = "username" placeholder = "Display Name" required)
+        input(type = "text" name = "username" placeholder = "Display Name" required autocomplete = "off")
         label() Room
         input(type = "text" name = "room" placeholder = "Room" required)
         button(class="btn btn-lg btn-primary") join
     
-block scripts
-  script(src="/javascripts/joinBundle.js")
