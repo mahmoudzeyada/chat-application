@@ -43,6 +43,5 @@ local-dev/bundle.js
 
 .vscode
 .eslintrc.json
-tslint.json
 playground/
 config/
