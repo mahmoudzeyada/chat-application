@@ -5,7 +5,7 @@ import * as logger from "morgan";
 import * as path from "path";
 import * as socketIo from "socket.io";
 import Chat from "./chat/chat";
-import * as config from "./config/config.json";
+import * as config from "../config.json";
 import { indexRouterObj } from "./routes/index.router";
 import { chatRouterObj } from "./routes/chat.router";
 export class ChatServer {
