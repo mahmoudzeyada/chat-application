@@ -4,11 +4,13 @@ export const compileMessages = (
   template: string,
   createdAt: string,
   text: string,
-  container: JQuery
+  container: JQuery,
+  username?: string
 ): void => {
   const html = Mustache.render(template, {
     text,
-    createdAt
+    createdAt,
+    username
   });
   container.append(html);
   // animation to scroll bottom
