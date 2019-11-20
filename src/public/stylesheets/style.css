@@ -33,7 +33,7 @@ img {
 
 .recent_heading {
   float: left;
-  width: 40%;
+  width: 80%;
 }
 
 .srch_bar {
@@ -237,6 +237,7 @@ img {
 .msg_history {
   height: 87%;
   overflow-y: auto;
+  padding: 20px;
 }
 
 .input_msg_write {
@@ -274,4 +275,31 @@ img {
 /* Add a background color on hover */
 .btn-group button:hover {
   background-color: #3e8e41;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited {
+  background-color: hsl(268, 98%, 50%) !important;
+}
+
+.room-title {
+  font-weight: 400;
+  font-size: 22px;
+  background: #2c2f3a;
+  padding: 24px;
+}
+
+.list-title {
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 4px;
+  padding: 12px 24px 0 24px;
+}
+
+.users {
+  list-style-type: none;
+  font-weight: 300;
+  padding: 12px 24px 0 24px;
 }
