@@ -1,0 +1,1 @@
+console.error("Error: SyntaxError: Unexpected token / in JSON at position 1495 while parsing json file /home/mahmoudzeyada/chatapp/package.json");

@@ -1,0 +1,34 @@
+/* Join Page Styles */
+
+.centered-form {
+  background: #333744;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.centered-form__box {
+  box-shadow: 0px 0px 17px 1px #1D1F26;
+  background: #F7F7FA;
+  padding: 24px;
+  width: 250px;
+}
+
+.centered-form button {
+  width: 100%;
+  background-color: hsl(268, 98%, 50%) none repeat scroll 0 0;
+}
+
+.centered-form input {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited {
+  background-color: hsl(268, 98%, 50%) !important;
+}
