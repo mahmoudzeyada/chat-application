@@ -34,7 +34,7 @@
     "query-string": "^6.9.0",
     "rm-emoji-picker": "^0.4.0",
     "shelljs": "^0.8.3",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "socket.io-client": "^2.3.0",
     "ts-node": "^8.4.1",
     "@hapi/boom": "^8.0.1"
